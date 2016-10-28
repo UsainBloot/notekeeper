@@ -1,9 +1,7 @@
 # NoteKeeper
 
 [![NPM version][npm-image]][npm-url]
-[![Build Status][travis-image]][travis-url]
-[![Appveyor Build Status][appveyor-image]][appveyor-url]
-[![Dependency Status][david_img]][david_site]
+[![Build Status](https://travis-ci.org/UsainBloot/notekeeper.svg?branch=master)](https://travis-ci.org/UsainBloot/notekeeper)
 
 [Using chentsulin's electron-react-boilerplate](https://github.com/chentsulin/electron-react-boilerplate)
 
