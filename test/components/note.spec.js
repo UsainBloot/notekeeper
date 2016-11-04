@@ -28,10 +28,15 @@ describe('Note component', () => {
     const { component } = setup();
     const mock = (
       <div className="note__header">
-        <span className="note__header__label">Note 1</span>
+        <input className="note__header__label" />
       </div>
     );
     expect(component.contains(mock)).to.equal(true);
+  });
+
+  it('should have default note title as "Note 1"', () => {
+    const { component } = setup();
+    expect(component.find('input').value).to.equal('Note 1');
   });
 
   it('should should have a text area element', () => {

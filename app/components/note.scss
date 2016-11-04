@@ -1,4 +1,4 @@
-@import '../colours';
+@import '../styles/colours';
 
 $header-height: 16px;
 $header-padding: 20px;
@@ -6,26 +6,30 @@ $header-padding: 20px;
 .container {
 	width: 100%;
 	height: 100vh;
+}
 
-	textarea {
-		width: 100%;
-		height: calc(100% - #{($header-padding * 2) + $header-height});
+.note {
+	width: 100%;
+	height: calc(100% - #{($header-padding * 2) + $header-height});
 
-		padding: 20px 20px;
+	padding: 20px 20px;
 
-		background-color: $white;
+	background-color: $white;
 
-		border: none;
-		-webkit-box-sizing: border-box;
-		-moz-box-sizing: border-box;
-		box-sizing: border-box;
+	border: none;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
 
-		color: $grey--dark;
+	color: $grey--dark;
 
-		font-size: 14px;
-		font-family: Menlo, Source Code Pro, Monaco, monospace;
-	}
+	font-size: 14px;
+	font-family: Menlo, Source Code Pro, Monaco, monospace;
+}
 
+.markdown {
+  width: 100%;
+  height: 100%;
 }
 
 .header {
@@ -37,10 +41,14 @@ $header-padding: 20px;
 	border-bottom: 1px solid $grey--light;
 
 	&__label {
-
+    border: none;
 		color: $grey--medium;
 
 		font-size: 16px;
 		font-weight: bold;
 	}
+
+  &__btn {
+    float: right;
+  }
 }
