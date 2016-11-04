@@ -8,7 +8,7 @@ describe('Note actions', () => {
     expect(actions.save()).to.deep.equal({ type: actions.NOTE_SAVE });
   });
 
-  it('should save should create NOTE_UPDATE_TITLE action', () => {
+  it('should create NOTE_UPDATE_TITLE action', () => {
     expect(actions.updateTitle('title')).to.deep.equal({
       type: actions.NOTE_UPDATE_TITLE,
       payload: {
@@ -17,7 +17,25 @@ describe('Note actions', () => {
     });
   });
 
-  it('should save should create NOTE_CONVERT_TO_HTML action', () => {
+  it('should create NOTE_SWITCH_VIEW action with edit payload for edit view', () => {
+    expect(actions.switchView('edit')).to.deep.equal({
+      type: actions.NOTE_SWITCH_VIEW,
+      payload: {
+        view: 'edit'
+      }
+    });
+  });
+
+  it('should create NOTE_SWITCH_VIEW action with view payload for view', () => {
+    expect(actions.switchView('view')).to.deep.equal({
+      type: actions.NOTE_SWITCH_VIEW,
+      payload: {
+        view: 'view'
+      }
+    });
+  });
+
+  it('should create NOTE_CONVERT_TO_HTML action', () => {
     marked.setOptions({
       renderer: new marked.Renderer(),
       gfm: true,
@@ -28,13 +46,13 @@ describe('Note actions', () => {
       smartLists: true,
       smartypants: false
     });
-    const rawMarkdown = '**test**';
-    const html = marked(rawMarkdown);
+    const raw = '**test**';
+    const html = marked(raw);
 
-    expect(actions.convertToHtml(rawMarkdown)).to.deep.equal({
+    expect(actions.convertToHtml(raw)).to.deep.equal({
       type: actions.NOTE_CONVERT_TO_HTML,
       payload: {
-        markdown: rawMarkdown,
+        raw,
         html
       }
     });

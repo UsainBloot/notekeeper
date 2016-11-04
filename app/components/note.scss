@@ -2,6 +2,7 @@
 
 $header-height: 16px;
 $header-padding: 20px;
+$header-full-height: ($header-padding * 2) + $header-height;
 
 $padding: 20px;
 
@@ -10,9 +11,9 @@ $padding: 20px;
 	height: 100vh;
 }
 
-.note {
+.edit {
 	width: 100%;
-	height: calc(100% - #{($header-padding * 2) + $header-height});
+	height: calc(100% - #{$header-full-height});
 
 	padding: $padding;
 
@@ -29,14 +30,11 @@ $padding: 20px;
 	font-family: Menlo, Source Code Pro, Monaco, monospace;
 }
 
-.markdown {
-  position: absolute;
+.view {
   width: calc(100% - #{$padding * 2});
-  height: calc(50% - #{$padding * 2});
+  height: calc(100% - #{$header-full-height + ($padding * 2)});
   padding: $padding;
-  bottom: 0;
-  color: $black;
-  background-color: $white;
+  overflow-y: scroll;
 }
 
 .header {
@@ -56,6 +54,11 @@ $padding: 20px;
 	}
 
   &__btn {
+    margin-left: 10px;
     float: right;
+
+    &:last-of-type {
+      margin-left: 0;
+    }
   }
 }

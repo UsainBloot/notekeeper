@@ -11,11 +11,15 @@ function setup() {
     save: spy(),
     convertToHtml: spy(),
     updateTitle: spy(),
+    switchView: spy()
   };
   const props = {
     convertToHtml: actions.convertToHtml,
     updateTitle: actions.updateTitle,
+    switchView: actions.switchView,
+    isEditView: true,
     title: 'Note 1',
+    view: 'edit',
     html: '<div></div>'
   };
   const component = shallow(<Note {...props} />);
@@ -36,11 +40,11 @@ describe('Note component', () => {
     const { component } = setup();
     const mock = (
       <div className="note__header">
-        <input className="note__header__label" type="text" />
-        <button className="note__header__btn btn btn--white">Convert to HTML</button>
+        <input type="text" className="note__header__label" />
+        <button className="note__header__btn btn btn--white">View</button>
       </div>
     );
-    expect(component.contains(mock)).to.equal(true);
+    expect(component.find('.note__header').equals(mock)).to.deep.equal(true);
   });
 
   it('should have default note title as "Note 1"', () => {

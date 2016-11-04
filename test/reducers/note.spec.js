@@ -1,11 +1,11 @@
 import { expect } from 'chai';
 import note from '../../app/reducers/note';
-import { NOTE_UPDATE_TITLE, NOTE_CONVERT_TO_HTML } from '../../app/actions/note';
+import { NOTE_UPDATE_TITLE, NOTE_SWITCH_VIEW, NOTE_CONVERT_TO_HTML } from '../../app/actions/note';
 
 
 describe('Note reducers', () => {
   it('should handle initial state', () => {
-    expect(note({}, {})).to.equal({});
+    expect(note({}, {})).to.deep.equal({});
   });
 
   it('should handle NOTE_UPDATE_TITLE action', () => {
@@ -16,8 +16,21 @@ describe('Note reducers', () => {
       }
     };
 
-    expect(note({}, updateTitleAction)).to.equal({
+    expect(note({}, updateTitleAction)).to.deep.equal({
       title: 'test title'
+    });
+  });
+
+  it('should handle NOTE_SWITCH_VIEW action', () => {
+    const switchViewAction = {
+      type: NOTE_SWITCH_VIEW,
+      payload: {
+        view: 'test view'
+      }
+    };
+
+    expect(note({}, switchViewAction)).to.deep.equal({
+      view: 'test view'
     });
   });
 
@@ -26,14 +39,13 @@ describe('Note reducers', () => {
       type: NOTE_CONVERT_TO_HTML,
       payload: {
         html: '<p><strong>test text</strong></p>',
-        markdown: '**test text**'
+        raw: '**test text**'
       }
     };
 
-    expect(note({}, convertToHtmlAction)).to.equal({
-      view: 'html',
+    expect(note({}, convertToHtmlAction)).to.deep.equal({
       html: '<p><strong>test text</strong></p>',
-      markdown: '**test text**'
+      raw: '**test text**'
     });
   });
 });

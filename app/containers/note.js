@@ -7,7 +7,9 @@ function mapStateToProps(state) {
   return {
     note: state.note,
     title: state.note.title,
-    html: state.note.html
+    view: state.note.view,
+    html: state.note.html,
+    isEditView: state.note.view === 'edit'
   };
 }
 

@@ -5,9 +5,13 @@ export default class Note extends Component {
   static propTypes = {
     convertToHtml: PropTypes.func.isRequired,
     updateTitle: PropTypes.func.isRequired,
+    switchView: PropTypes.func.isRequired,
     title: PropTypes.string.isRequired,
-    html: PropTypes.string.isRequired
+    view: PropTypes.string.isRequired,
+    html: PropTypes.string.isRequired,
+    isEditView: PropTypes.bool.isRequired
   };
+
 
   componentWillMount() {
   }
@@ -20,8 +24,17 @@ export default class Note extends Component {
   componentWillUpdate() {
   }
 
+  switchView(view, raw) {
+    if (view === 'edit') {
+      this.props.convertToHtml(raw.value);
+      this.props.switchView('view');
+    } else {
+      this.props.switchView('edit');
+    }
+  }
+
   render() {
-    const { convertToHtml, updateTitle, html } = this.props;
+    const { updateTitle, view, html, isEditView } = this.props;
     return (
       <div className={styles.container}>
         <div className={styles.header}>
@@ -33,18 +46,18 @@ export default class Note extends Component {
           />
           <button
             className={`${styles.header__btn} btn btn--white`}
-            onClick={() => convertToHtml(this.noteTextArea.value)}
+            onClick={() => this.switchView(view, this.noteTextArea)}
           >
-            Convert to HTML
+            { isEditView ? 'View' : 'Edit' }
           </button>
         </div>
         <textarea
-          className={styles.note}
+          className={`${styles.edit} ${isEditView ? '' : 'hide'}`}
           name="noteText"
           ref={(input) => { this.noteTextArea = input; }}
         />
         <div
-          className={styles.markdown}
+          className={`${styles.view} view ${isEditView ? 'hide' : ''}`}
           dangerouslySetInnerHTML={{ __html: html }}
         />
       </div>

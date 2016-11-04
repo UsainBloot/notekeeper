@@ -1,11 +1,11 @@
 import _ from 'lodash';
-import { NOTE_SAVE, NOTE_UPDATE_TITLE, NOTE_CONVERT_TO_HTML } from '../actions/note';
+import { NOTE_SAVE, NOTE_UPDATE_TITLE, NOTE_SWITCH_VIEW, NOTE_CONVERT_TO_HTML } from '../actions/note';
 
 export default function note(
   state: Object = {
-    view: 'note',
+    view: 'edit',
     html: '',
-    markdown: '',
+    raw: '',
     title: 'Note 1'
   },
   action: Object
@@ -17,11 +17,14 @@ export default function note(
       return _.extend({}, state, {
         title: action.payload.title
       });
+    case NOTE_SWITCH_VIEW:
+      return _.extend({}, state, {
+        view: action.payload.view
+      });
     case NOTE_CONVERT_TO_HTML:
       return _.extend({}, state, {
-        view: 'html',
         html: action.payload.html,
-        markdown: action.payload.markdown
+        raw: action.payload.raw
       });
     default:
       return state;
