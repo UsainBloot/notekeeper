@@ -23,4 +23,19 @@ describe('Note component', () => {
     const { component } = setup();
     expect(component.hasClass('note__container')).to.equal(true);
   });
+
+  it('should should have a header div element', () => {
+    const { component } = setup();
+    const mock = (
+      <div className="note__header">
+        <span className="note__header__label">Note 1</span>
+      </div>
+    );
+    expect(component.contains(mock)).to.equal(true);
+  });
+
+  it('should should have a text area element', () => {
+    const { component } = setup();
+    expect(component.contains(<textarea />)).to.equal(true);
+  });
 });

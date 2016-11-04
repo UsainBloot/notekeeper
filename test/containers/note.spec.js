@@ -19,11 +19,9 @@ function setup(initialState) {
 }
 
 
-describe('containers', () => {
-  describe('App', () => {
-    it('should display initial count', () => {
-      const { app } = setup();
-      expect(app.containsMatchingElement(<NotePage />)).to.equal(true);
-    });
+describe('Note containers', () => {
+  it('should display', () => {
+    const { app } = setup();
+    expect(app.containsMatchingElement(<NotePage />)).to.equal(true);
   });
 });
