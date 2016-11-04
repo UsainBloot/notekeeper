@@ -1,6 +1,4 @@
-// @flow
 import React, { Component } from 'react';
-import { Link } from 'react-router';
 import styles from './home.scss';
 
 export default class Home extends Component {

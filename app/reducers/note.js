@@ -1,4 +1,3 @@
-// @flow
 import { NOTE_SAVE } from '../actions/note';
 
 export default function counter(state: number = 0, action: Object) {
