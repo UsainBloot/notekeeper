@@ -8,9 +8,17 @@ import Note from '../../app/components/note';
 
 function setup() {
   const actions = {
-    save: spy()
+    save: spy(),
+    convertToHtml: spy(),
+    updateTitle: spy(),
   };
-  const component = shallow(<Note />);
+  const props = {
+    convertToHtml: actions.convertToHtml,
+    updateTitle: actions.updateTitle,
+    title: 'Note 1',
+    html: '<div></div>'
+  };
+  const component = shallow(<Note {...props} />);
   return {
     component,
     actions
@@ -28,7 +36,8 @@ describe('Note component', () => {
     const { component } = setup();
     const mock = (
       <div className="note__header">
-        <input className="note__header__label" />
+        <input className="note__header__label" type="text" />
+        <button className="note__header__btn btn btn--white">Convert to HTML</button>
       </div>
     );
     expect(component.contains(mock)).to.equal(true);
@@ -41,6 +50,6 @@ describe('Note component', () => {
 
   it('should should have a text area element', () => {
     const { component } = setup();
-    expect(component.contains(<textarea />)).to.equal(true);
+    expect(component.contains(<textarea className="note__note" name="noteText" />)).to.equal(true);
   });
 });

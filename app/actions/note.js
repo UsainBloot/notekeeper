@@ -30,7 +30,7 @@ export function updateTitle(name) {
   };
 }
 
-export function convertToMarkdown(markdown) {
+export function convertToHtml(markdown) {
   const html = marked(markdown);
   return {
     type: NOTE_CONVERT_TO_HTML,

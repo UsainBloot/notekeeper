@@ -5,7 +5,8 @@ export default function note(
   state: Object = {
     view: 'note',
     html: '',
-    markdown: ''
+    markdown: '',
+    title: 'Note 1'
   },
   action: Object
 ) {

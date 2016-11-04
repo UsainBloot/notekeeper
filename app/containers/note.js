@@ -6,6 +6,7 @@ import * as NoteActions from '../actions/note';
 function mapStateToProps(state) {
   return {
     note: state.note,
+    title: state.note.title,
     html: state.note.html
   };
 }
