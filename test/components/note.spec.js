@@ -2,9 +2,8 @@
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import React from 'react';
-import { shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import Note from '../../app/components/note';
-
 
 function setup() {
   const actions = {
@@ -22,38 +21,46 @@ function setup() {
     view: 'edit',
     html: '<div></div>'
   };
-  const component = shallow(<Note {...props} />);
+  const component = mount(<Note {...props} />);
   return {
     component,
-    actions
+    actions,
+    title: component.find('.note__header__title'),
+    editViewButton: component.find('.note__header__btn'),
+    edit: component.find('.notes__edit'),
+    view: component.find('.notes__view')
   };
 }
 
-
 describe('Note component', () => {
-  it('should should have an note__container classname', () => {
-    const { component } = setup();
-    expect(component.hasClass('note__container')).to.equal(true);
+  it('should dispatch updateTitle action when title input loses focus', () => {
+    const { title, actions } = setup();
+    // title.at(0).value = 'test note title';
+    title.at(0).simulate('blur');
+    expect(actions.updateTitle.called).to.be.true;
+    // expect(actions.updateTitle.calledWith('test note title')).to.be.true;
   });
 
-  it('should should have a header div element', () => {
-    const { component } = setup();
-    const mock = (
-      <div className="note__header">
-        <input type="text" className="note__header__label" />
-        <button className="note__header__btn btn btn--white">View</button>
-      </div>
-    );
-    expect(component.find('.note__header').equals(mock)).to.deep.equal(true);
+  it('should dispatch convertToHtml action on view button click', () => {
+    const { component, editViewButton, actions } = setup();
+    // edit.at(0).value = '**test**';
+    component.update();
+    editViewButton.at(0).simulate('click');
+    expect(actions.convertToHtml.called).to.be.true;
   });
 
-  it('should have default note title as "Note 1"', () => {
-    const { component } = setup();
-    expect(component.find('input').value).to.equal('Note 1');
+  it('should dispatch switchView action with "view" payload on view button click', () => {
+    const { editViewButton, actions } = setup();
+    editViewButton.at(0).simulate('click');
+    expect(actions.switchView.called).to.be.true;
+    expect(actions.switchView.calledWith('view')).to.be.true;
   });
 
-  it('should should have a text area element', () => {
-    const { component } = setup();
-    expect(component.contains(<textarea className="note__note" name="noteText" />)).to.equal(true);
+  it('should dispatch switchView action with "edit" payload on edit button click', () => {
+    const { component, editViewButton, actions } = setup();
+    component.setProps({ view: 'view' });
+    editViewButton.at(0).simulate('click');
+    expect(actions.switchView.called).to.be.true;
+    expect(actions.switchView.calledWith('edit')).to.be.true;
   });
 });

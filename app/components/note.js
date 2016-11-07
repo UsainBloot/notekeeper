@@ -17,8 +17,8 @@ export default class Note extends Component {
   }
 
   componentDidMount() {
-    this.noteTextArea.focus();
-    this.noteName.value = this.props.title;
+    this.noteEdit.focus();
+    this.noteTitle.value = this.props.title;
   }
 
   componentWillUpdate() {
@@ -39,22 +39,22 @@ export default class Note extends Component {
       <div className={styles.container}>
         <div className={styles.header}>
           <input
-            className={styles.header__label}
+            className={styles.header__title}
             type="text"
-            ref={(input) => { this.noteName = input; }}
-            onBlur={() => updateTitle(this.noteName.value)}
+            ref={(input) => { this.noteTitle = input; }}
+            onBlur={() => updateTitle(this.noteTitle.value)}
           />
           <button
             className={`${styles.header__btn} btn btn--white`}
-            onClick={() => this.switchView(view, this.noteTextArea)}
+            onClick={() => this.switchView(view, this.noteEdit)}
           >
             { isEditView ? 'View' : 'Edit' }
           </button>
         </div>
         <textarea
           className={`${styles.edit} ${isEditView ? '' : 'hide'}`}
-          name="noteText"
-          ref={(input) => { this.noteTextArea = input; }}
+          name="noteEdit"
+          ref={(input) => { this.noteEdit = input; }}
         />
         <div
           className={`${styles.view} view ${isEditView ? 'hide' : ''}`}
