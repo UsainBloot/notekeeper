@@ -14,7 +14,9 @@ function setup(initialState) {
     </Provider>
   );
   return {
-    app
+    app,
+    edit: app.find('.notes__edit'),
+    view: app.find('.notes__view')
   };
 }
 
@@ -24,4 +26,20 @@ describe('Note containers', () => {
     const { app } = setup();
     expect(app.containsMatchingElement(<NotePage />)).to.equal(true);
   });
+
+  // it('should display edit panel when view in store is set to "edit"', () => {
+  //   const { edit, view } = setup({
+  //     view: 'edit'
+  //   });
+  //   expect(edit.hasClass('hide')).to.be.false;
+  //   expect(view.hasClass('hide')).to.be.true;
+  // });
+  //
+  // it('should display view panel when view in store is set to "view"', () => {
+  //   const { edit, view } = setup({
+  //     view: 'view'
+  //   });
+  //   expect(edit.hasClass('hide')).to.be.true;
+  //   expect(view.hasClass('hide')).to.be.false;
+  // });
 });

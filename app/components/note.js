@@ -58,6 +58,7 @@ export default class Note extends Component {
         />
         <div
           className={`${styles.view} view ${isEditView ? 'hide' : ''}`}
+          /* CHANGE THIS */
           dangerouslySetInnerHTML={{ __html: html }}
         />
       </div>

@@ -27,39 +27,39 @@ function setup() {
     actions,
     title: component.find('.note__header__title'),
     editViewButton: component.find('.note__header__btn'),
-    edit: component.find('.notes__edit'),
-    view: component.find('.notes__view')
+    edit: component.find('.note__edit'),
+    view: component.find('.note__view')
   };
 }
 
 describe('Note component', () => {
   it('should dispatch updateTitle action when title input loses focus', () => {
     const { title, actions } = setup();
-    // title.at(0).value = 'test note title';
-    title.at(0).simulate('blur');
+    title.node.value = 'test note title';
+    title.simulate('blur');
     expect(actions.updateTitle.called).to.be.true;
-    // expect(actions.updateTitle.calledWith('test note title')).to.be.true;
+    expect(actions.updateTitle.calledWith('test note title')).to.be.true;
   });
 
   it('should dispatch convertToHtml action on view button click', () => {
-    const { component, editViewButton, actions } = setup();
-    // edit.at(0).value = '**test**';
-    component.update();
-    editViewButton.at(0).simulate('click');
+    const { edit, editViewButton, actions } = setup();
+    edit.node.value = '**test**';
+    editViewButton.simulate('click');
     expect(actions.convertToHtml.called).to.be.true;
+    expect(actions.convertToHtml.calledWith('**test**')).to.be.true;
   });
 
-  it('should dispatch switchView action with "view" payload on view button click', () => {
+  it('should dispatch switchView action with \'view\' payload on view button click', () => {
     const { editViewButton, actions } = setup();
-    editViewButton.at(0).simulate('click');
+    editViewButton.simulate('click');
     expect(actions.switchView.called).to.be.true;
     expect(actions.switchView.calledWith('view')).to.be.true;
   });
 
-  it('should dispatch switchView action with "edit" payload on edit button click', () => {
+  it('should dispatch switchView action with \'edit\' payload on edit button click', () => {
     const { component, editViewButton, actions } = setup();
     component.setProps({ view: 'view' });
-    editViewButton.at(0).simulate('click');
+    editViewButton.simulate('click');
     expect(actions.switchView.called).to.be.true;
     expect(actions.switchView.calledWith('edit')).to.be.true;
   });
