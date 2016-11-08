@@ -1,4 +1,6 @@
-@import "colours";
+@import './styles/colours';
+@import './styles/buttons';
+@import './styles/view';
 
 :not(input):not(textarea),
 :not(input):not(textarea)::after,
@@ -49,4 +51,8 @@ a:hover {
   opacity: 1;
   text-decoration: none;
   cursor: pointer;
+}
+
+.hide {
+  display: none;
 }

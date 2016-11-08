@@ -1,0 +1,20 @@
+@import './colours';
+
+.btn {
+  padding: 5px 10px;
+
+  border-radius: 5px;
+  cursor: pointer;
+
+  &--white{
+    border: 1px solid $grey--light;
+    color: $grey--dark;
+    background-color: $white;
+
+    &:hover,
+    &:focus,
+    &:active {
+      color: $blue--light;
+    }
+  }
+}
