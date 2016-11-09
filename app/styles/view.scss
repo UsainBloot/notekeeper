@@ -2,6 +2,10 @@
   background-color: $white;
   color: $black;
 
+  ul {
+    list-style: initial;
+  }
+
   p {
     font-size: 14px;
     font-weight: none;
