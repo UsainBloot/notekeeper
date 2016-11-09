@@ -1,4 +1,5 @@
 @import '../styles/colours';
+@import '../styles/nodrag';
 
 $header-height: 16px;
 $header-padding: 20px;
@@ -28,6 +29,7 @@ $padding: 20px;
 
 	font-size: 14px;
 	font-family: Menlo, Source Code Pro, Monaco, monospace;
+  @include nodrag();
 }
 
 .view {
@@ -35,6 +37,7 @@ $padding: 20px;
   height: calc(100% - #{$header-full-height + ($padding * 2)});
   padding: $padding;
   overflow-y: scroll;
+  @include nodrag();
 }
 
 .header {
