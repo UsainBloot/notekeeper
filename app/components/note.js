@@ -43,10 +43,29 @@ export default class Note extends Component {
       const value = target.value;
 
       // set textarea value to: text before caret + tab + text after caret
-      target.value = `${value.substring(0, start)}  ${value.substring(end)}`;
+      if (start === end) {
+        target.value = `${value.substring(0, start)}  ${value.substring(end)}`;
 
-      // put caret at right position again (add one for the tab)
-      this.noteEdit.selectionStart = this.noteEdit.selectionEnd = start + 2;
+        // put caret at right position again (add two for the tab)
+        this.noteEdit.selectionStart = this.noteEdit.selectionEnd = start + 2;
+      } else {
+        let output = '';
+        let spaceCount = 0;
+        const lines = target.value.split('\n');
+
+        for (const line of lines) {
+          if (line !== '') {
+            output += `  ${line}\n`;
+            spaceCount += 2;
+          }
+        }
+        target.value = output;
+
+        // put caret at right position again (add two for the tab)
+        this.noteEdit.selectionStart = start;
+        this.noteEdit.selectionEnd = end + spaceCount;
+      }
+
       event.preventDefault();
     }
   }
