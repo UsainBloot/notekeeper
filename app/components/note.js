@@ -64,6 +64,7 @@ export default class Note extends Component {
 
       if (isHighlight) {
         let output = '';
+        let counter = 0;
         let spaceCount = 0;
         const targetValue = {
           before: target.value.substring(0, start),
@@ -72,21 +73,26 @@ export default class Note extends Component {
         };
 
         for (const line of targetValue.highlightedLines) {
+          counter += 1;
           if (line !== '') {
             if (isIndent) {
               /* Indent line by 2 spaces */
-              output += `  ${line}\n`;
+              output += `  ${line}`;
               spaceCount += 2;
             } else if (line.substring(0, 2) === '  ') {
               /* Unindent - Line starts with 2 spaces */
-              output += `${line.substring(2)}\n`;
+              output += `${line.substring(2)}`;
               spaceCount -= 2;
             } else if (line.substring(0, 1) === ' ') {
               /* Unindent - Line starts with a single space */
-              output += `${line.substring(1)}\n`;
+              output += `${line.substring(1)}`;
               spaceCount -= 1;
             } else {
-              output += `${line}\n`;
+              output += `${line}`;
+            }
+
+            if (counter !== targetValue.highlightedLines.length) {
+              output += '\n';
             }
           }
         }

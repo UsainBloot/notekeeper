@@ -263,5 +263,154 @@ describe('Note component', () => {
         });
       });
     });
+
+    describe('multi line', () => {
+      describe('indent', () => {
+        it('should indent on multiple lines with 2 spaces', () => {
+          const { edit } = setup();
+          const carratLocation = {
+            start: 0,
+            end: 13
+          };
+
+          edit.node.value = 'test 1\ntest 2';
+          edit.node.selectionStart = carratLocation.start;
+          edit.node.selectionEnd = carratLocation.end;
+
+          edit.simulate('keyDown', { keyCode: 9 });
+          expect(Note.prototype.checkforTabbing.calledOnce).to.be.true;
+          expect(edit.node.value).to.equal('  test 1\n  test 2');
+          expect(edit.node.selectionStart).to.equal(carratLocation.start);
+          expect(edit.node.selectionEnd).to.equal(carratLocation.end + 4);
+        });
+
+        it('should indent on multiple lines surrounded by other unselected lines', () => {
+          const { edit } = setup();
+          const carratLocation = {
+            start: 7,
+            end: 18
+          };
+
+          edit.node.value = 'line 1\ntest\ntest 2\nline 2';
+          edit.node.selectionStart = carratLocation.start;
+          edit.node.selectionEnd = carratLocation.end;
+
+          edit.simulate('keyDown', {
+            keyCode: 9
+          });
+          expect(Note.prototype.checkforTabbing.calledOnce).to.be.true;
+          expect(edit.node.value).to.equal('line 1\n  test\n  test 2\nline 2');
+          expect(edit.node.selectionStart).to.equal(carratLocation.start);
+          expect(edit.node.selectionEnd).to.equal(carratLocation.end + 4);
+        });
+      });
+
+      describe('unindent', () => {
+        it('should unindent on multiple lines  with 2 spaces at the start of the line', () => {
+          const { edit } = setup();
+          const carratLocation = {
+            start: 0,
+            end: 17
+          };
+
+          edit.node.value = '  test 1\n  test 2';
+          edit.node.selectionStart = carratLocation.start;
+          edit.node.selectionEnd = carratLocation.end;
+
+          edit.simulate('keyDown', {
+            keyCode: 9,
+            shiftKey: true
+          });
+          expect(Note.prototype.checkforTabbing.calledOnce).to.be.true;
+          expect(edit.node.value).to.equal('test 1\ntest 2');
+          expect(edit.node.selectionStart).to.equal(carratLocation.start);
+          expect(edit.node.selectionEnd).to.equal(carratLocation.end - 4);
+        });
+
+        it('should unindent on multiple lines  with 1 space at the start of the line', () => {
+          const { edit } = setup();
+          const carratLocation = {
+            start: 0,
+            end: 15
+          };
+
+          edit.node.value = ' test 1\n test 2';
+          edit.node.selectionStart = carratLocation.start;
+          edit.node.selectionEnd = carratLocation.end;
+
+          edit.simulate('keyDown', {
+            keyCode: 9,
+            shiftKey: true
+          });
+          expect(Note.prototype.checkforTabbing.calledOnce).to.be.true;
+          expect(edit.node.value).to.equal('test 1\ntest 2');
+          expect(edit.node.selectionStart).to.equal(carratLocation.start);
+          expect(edit.node.selectionEnd).to.equal(carratLocation.end - 2);
+        });
+
+        it('should not unindent on multiple lines with no ident', () => {
+          const { edit } = setup();
+          const carratLocation = {
+            start: 0,
+            end: 13
+          };
+
+          edit.node.value = 'test 1\ntest 2';
+          edit.node.selectionStart = carratLocation.start;
+          edit.node.selectionEnd = carratLocation.end;
+
+          edit.simulate('keyDown', {
+            keyCode: 9,
+            shiftKey: true
+          });
+          expect(Note.prototype.checkforTabbing.calledOnce).to.be.true;
+          expect(edit.node.value).to.equal('test 1\ntest 2');
+          expect(edit.node.selectionStart).to.equal(carratLocation.start);
+          expect(edit.node.selectionEnd).to.equal(carratLocation.end);
+        });
+
+        it('should unindent on multiple lines surrounded by other unselected lines', () => {
+          const { edit } = setup();
+          const carratLocation = {
+            start: 7,
+            end: 24
+          };
+
+          edit.node.value = 'line 1\n  test 1\n  test 2\nline 2';
+          edit.node.selectionStart = carratLocation.start;
+          edit.node.selectionEnd = carratLocation.end;
+
+          edit.simulate('keyDown', {
+            keyCode: 9,
+            shiftKey: true
+          });
+          expect(Note.prototype.checkforTabbing.calledOnce).to.be.true;
+          expect(edit.node.value).to.equal('line 1\ntest 1\ntest 2\nline 2');
+          expect(edit.node.selectionStart).to.equal(carratLocation.start);
+          expect(edit.node.selectionEnd).to.equal(carratLocation.end - 4);
+        });
+
+        it('should unindent a single indent on multiple lines surrounded by other unselected lines', () => {
+          const { edit } = setup();
+          const carratLocation = {
+            start: 7,
+            end: 22
+          };
+
+          edit.node.value = 'line 1\n test 1\n test 2\nline 2';
+          edit.node.selectionStart = carratLocation.start;
+          edit.node.selectionEnd = carratLocation.end;
+
+          edit.simulate('keyDown', {
+            keyCode: 9,
+            shiftKey: true
+          });
+          expect(Note.prototype.checkforTabbing.calledOnce).to.be.true;
+          expect(edit.node.value).to.equal('line 1\ntest 1\ntest 2\nline 2');
+          expect(edit.node.selectionStart).to.equal(carratLocation.start);
+          expect(edit.node.selectionEnd).to.equal(carratLocation.end - 2);
+        });
+      });
+    });
   });
 });
