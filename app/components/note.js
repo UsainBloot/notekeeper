@@ -38,7 +38,7 @@ export default class Note extends Component {
       let isIndent = true;
       let spaceIncrement = 2;
 
-      if(event.shiftKey) {
+      if (event.shiftKey) {
         isIndent = false;
         spaceIncrement = -2;
       }
@@ -52,10 +52,14 @@ export default class Note extends Component {
 
       // set textarea value to: text before caret + tab + text after caret
       if (start === end) {
-        target.value = `${value.substring(0, start)}  ${value.substring(end)}`;
+        if (isIndent) {
+          target.value = `${value.substring(0, start)}  ${value.substring(end)}`;
+        } else {
+          target.value = value.substring(0, start - 2) + value.substring(end);
+        }
 
         // put caret at right position again (add two for the tab)
-        this.noteEdit.selectionStart = this.noteEdit.selectionEnd = start + 2;
+        this.noteEdit.selectionStart = this.noteEdit.selectionEnd = start + spaceIncrement;
       } else {
         let output = '';
         let spaceCount = 0;
@@ -64,9 +68,6 @@ export default class Note extends Component {
           before: target.value.substring(0, start),
           end: target.value.substring(end + 1)
         };
-
-        console.log('before', selection.before);
-        console.log('end', selection.end);
 
         const lines = target.value.substring(start, end + 1).split('\n');
 
