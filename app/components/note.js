@@ -74,12 +74,15 @@ export default class Note extends Component {
         for (const line of targetValue.highlightedLines) {
           if (line !== '') {
             if (isIndent) {
+              /* Indent line by 2 spaces */
               output += `  ${line}\n`;
-              spaceCount += spaceIncrement;
+              spaceCount += 2;
             } else if (line.substring(0, 2) === '  ') {
+              /* Unindent - Line starts with 2 spaces */
               output += `${line.substring(2)}\n`;
               spaceCount -= 2;
             } else if (line.substring(0, 1) === ' ') {
+              /* Unindent - Line starts with a single space */
               output += `${line.substring(1)}\n`;
               spaceCount -= 1;
             } else {
@@ -88,6 +91,7 @@ export default class Note extends Component {
           }
         }
 
+        /* Output and reset */
         target.value = targetValue.before + output + targetValue.end;
         resetCarrat.call(this, {
           isHighlight,
@@ -96,15 +100,22 @@ export default class Note extends Component {
           increment: spaceCount
         });
       } else {
+        const startOfLineIndex = target.value.substring(0, start).lastIndexOf('\n') + 1;
         if (isIndent) {
+          /* Indent line by 2 spaces */
           target.value = `${value.substring(0, start)}  ${value.substring(end)}`;
-        } else if (target.value.substring(start - 2, start) === '  ') {
-          target.value = value.substring(0, start - 2) + value.substring(end);
-        } else if (target.value.substring(start - 1, start) === ' ') {
-          target.value = value.substring(0, start - 1) + value.substring(end);
+          spaceIncrement = 2;
+        } else if (target.value.substring(startOfLineIndex, startOfLineIndex + 2) === '  ') {
+          /* Unindent - Line starts with 2 spaces */
+          target.value = value.substring(startOfLineIndex + 2);
+          spaceIncrement = -2;
+        } else if (target.value.substring(startOfLineIndex, startOfLineIndex + 1) === ' ') {
+          /* Unindent - Line starts with a single space */
+          target.value = value.substring(startOfLineIndex + 1);
           spaceIncrement = -1;
         }
 
+        /* Reset */
         resetCarrat.call(this, {
           isHighlight,
           start,
