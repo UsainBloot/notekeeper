@@ -35,7 +35,7 @@ describe('Note actions', () => {
     });
   });
 
-  it('should create NOTE_CONVERT_TO_HTML action', () => {
+  it('should create NOTE_CONVERT_TO_HTML action and convert markdown to HTML', () => {
     marked.setOptions({
       renderer: new marked.Renderer(),
       gfm: true,
