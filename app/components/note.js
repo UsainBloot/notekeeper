@@ -34,7 +34,18 @@ export default class Note extends Component {
   }
 
   checkforTabbing(event) {
-    if (event.keyCode === 9) {
+    function resetCarrat(data) {
+      if (data.isHighlight) {
+        this.noteEdit.selectionStart = data.start;
+        this.noteEdit.selectionEnd = data.end + data.increment;
+      } else {
+        this.noteEdit.selectionStart = this.noteEdit.selectionEnd = data.start + data.increment;
+      }
+    }
+
+    const TAB_CODE = 9;
+
+    if (event.keyCode === TAB_CODE) {
       let isIndent = true;
       let spaceIncrement = 2;
 
@@ -46,46 +57,60 @@ export default class Note extends Component {
       // get caret position/selection
       const start = this.noteEdit.selectionStart;
       const end = this.noteEdit.selectionEnd;
+      const isHighlight = start !== end;
 
       const target = event.target;
       const value = target.value;
 
-      // set textarea value to: text before caret + tab + text after caret
-      if (start === end) {
-        if (isIndent) {
-          target.value = `${value.substring(0, start)}  ${value.substring(end)}`;
-        } else {
-          target.value = value.substring(0, start - 2) + value.substring(end);
-        }
-
-        // put caret at right position again (add two for the tab)
-        this.noteEdit.selectionStart = this.noteEdit.selectionEnd = start + spaceIncrement;
-      } else {
+      if (isHighlight) {
         let output = '';
         let spaceCount = 0;
-
-        const selection = {
+        const targetValue = {
           before: target.value.substring(0, start),
-          end: target.value.substring(end + 1)
+          end: target.value.substring(end + 1),
+          highlightedLines: target.value.substring(start, end + 1).split('\n')
         };
 
-        const lines = target.value.substring(start, end + 1).split('\n');
-
-        for (const line of lines) {
+        for (const line of targetValue.highlightedLines) {
           if (line !== '') {
             if (isIndent) {
               output += `  ${line}\n`;
-            } else {
+              spaceCount += spaceIncrement;
+            } else if (line.substring(0, 2) === '  ') {
               output += `${line.substring(2)}\n`;
+              spaceCount -= 2;
+            } else if (line.substring(0, 1) === ' ') {
+              output += `${line.substring(1)}\n`;
+              spaceCount -= 1;
+            } else {
+              output += `${line}\n`;
             }
-            spaceCount += spaceIncrement;
           }
         }
-        target.value = selection.before + output + selection.end;
 
-        // put caret at right position again (add two for the tab)
-        this.noteEdit.selectionStart = start;
-        this.noteEdit.selectionEnd = end + spaceCount;
+        target.value = targetValue.before + output + targetValue.end;
+        resetCarrat.call(this, {
+          isHighlight,
+          start,
+          end,
+          increment: spaceCount
+        });
+      } else {
+        if (isIndent) {
+          target.value = `${value.substring(0, start)}  ${value.substring(end)}`;
+        } else if (target.value.substring(start - 2, start) === '  ') {
+          target.value = value.substring(0, start - 2) + value.substring(end);
+        } else if (target.value.substring(start - 1, start) === ' ') {
+          target.value = value.substring(0, start - 1) + value.substring(end);
+          spaceIncrement = -1;
+        }
+
+        resetCarrat.call(this, {
+          isHighlight,
+          start,
+          end,
+          increment: spaceIncrement
+        });
       }
 
       event.preventDefault();
