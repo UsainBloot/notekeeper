@@ -35,6 +35,14 @@ export default class Note extends Component {
 
   checkforTabbing(event) {
     if (event.keyCode === 9) {
+      let isIndent = true;
+      let spaceIncrement = 2;
+
+      if(event.shiftKey) {
+        isIndent = false;
+        spaceIncrement = -2;
+      }
+
       // get caret position/selection
       const start = this.noteEdit.selectionStart;
       const end = this.noteEdit.selectionEnd;
@@ -51,15 +59,28 @@ export default class Note extends Component {
       } else {
         let output = '';
         let spaceCount = 0;
-        const lines = target.value.split('\n');
+
+        const selection = {
+          before: target.value.substring(0, start),
+          end: target.value.substring(end + 1)
+        };
+
+        console.log('before', selection.before);
+        console.log('end', selection.end);
+
+        const lines = target.value.substring(start, end + 1).split('\n');
 
         for (const line of lines) {
           if (line !== '') {
-            output += `  ${line}\n`;
-            spaceCount += 2;
+            if (isIndent) {
+              output += `  ${line}\n`;
+            } else {
+              output += `${line.substring(2)}\n`;
+            }
+            spaceCount += spaceIncrement;
           }
         }
-        target.value = output;
+        target.value = selection.before + output + selection.end;
 
         // put caret at right position again (add two for the tab)
         this.noteEdit.selectionStart = start;
