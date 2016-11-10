@@ -1,3 +1,5 @@
+@import '~highlight.js/styles/github';
+
 .view {
   background-color: $white;
   color: $black;
@@ -323,17 +325,6 @@
   input {
     -webkit-font-feature-settings: "liga" 0;
     font-feature-settings: "liga" 0;
-  }
-
-  ::before {
-    display: table;
-    content: "";
-  }
-
-  ::after {
-    display: table;
-    clear: both;
-    content: "";
   }
 
   >*:first-child {
@@ -688,5 +679,16 @@
 
   hr {
     border-bottom-color: #eee;
+  }
+
+  /* Inline code */
+  code {
+    display: inline-block;
+    margin-bottom: -8px;
+  }
+
+  /* Code blocks */
+  pre > code {
+    display: block;
   }
 }

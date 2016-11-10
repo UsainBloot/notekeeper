@@ -1,4 +1,5 @@
 import marked from 'marked';
+import highlight from 'highlight.js';
 
 marked.setOptions({
   renderer: new marked.Renderer(),
@@ -42,11 +43,19 @@ export function switchView(view) {
 
 export function convertToHtml(raw) {
   const html = marked(raw);
+  const markup = document.createElement('div');
+  markup.innerHTML = html;
+  const codeNodes = markup.getElementsByTagName('code');
+
+  for (const node of codeNodes) {
+    highlight.highlightBlock(node);
+  }
+
   return {
     type: NOTE_CONVERT_TO_HTML,
     payload: {
       raw,
-      html
+      html: markup.innerHTML
     }
   };
 }

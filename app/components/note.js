@@ -33,6 +33,25 @@ export default class Note extends Component {
     }
   }
 
+  checkforTabbing(event) {
+    if (event.keyCode === 9) {
+      // get caret position/selection
+      const start = this.noteEdit.selectionStart;
+      const end = this.noteEdit.selectionEnd;
+
+      const target = event.target;
+      const value = target.value;
+
+      // set textarea value to: text before caret + tab + text after caret
+      target.value = `${value.substring(0, start)} \t ${value.substring(end)}`;
+
+      // put caret at right position again (add one for the tab)
+      this.noteEdit.selectionStart = this.noteEdit.selectionEnd = start + 1;
+      event.preventDefault();
+    }
+  }
+
+
   render() {
     const { updateTitle, view, html, isEditView } = this.props;
     return (
@@ -55,6 +74,7 @@ export default class Note extends Component {
           className={`${styles.edit} ${isEditView ? '' : 'hide'}`}
           name="noteEdit"
           ref={(input) => { this.noteEdit = input; }}
+          onKeyDown={(input) => this.checkforTabbing(input)}
         />
         <div
           className={`${styles.view} view ${isEditView ? 'hide' : ''}`}
