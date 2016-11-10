@@ -107,12 +107,16 @@ export default class Note extends Component {
           spaceIncrement = 2;
         } else if (target.value.substring(startOfLineIndex, startOfLineIndex + 2) === '  ') {
           /* Unindent - Line starts with 2 spaces */
-          target.value = value.substring(startOfLineIndex + 2);
-          spaceIncrement = -2;
+          target.value = value.substring(0, startOfLineIndex) +
+            value.substring(startOfLineIndex + 2);
+          spaceIncrement = start !== startOfLineIndex ? -2 : 0;
         } else if (target.value.substring(startOfLineIndex, startOfLineIndex + 1) === ' ') {
           /* Unindent - Line starts with a single space */
-          target.value = value.substring(startOfLineIndex + 1);
-          spaceIncrement = -1;
+          target.value = value.substring(0, startOfLineIndex) +
+            value.substring(startOfLineIndex + 1);
+          spaceIncrement = start !== startOfLineIndex ? -1 : 0;
+        } else {
+          spaceIncrement = 0;
         }
 
         /* Reset */
