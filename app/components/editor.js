@@ -6,6 +6,58 @@ export default class Editor extends Component {
     isEditView: PropTypes.bool.isRequired
   }
 
+  static renderHighlightedLinesWithTabs(ident, value) {
+    const output = [];
+    let increment = 0;
+
+    for (const line of value.selectedLines) {
+      const leadingSpaces = (/^ {1,2}/).test(line);
+      const carratIncrement = (/^ [^ ]/).test(line) ? 1 : 2;
+      if (line !== '') {
+        if (ident) {
+          output.push(`  ${line}`);
+          increment += 2;
+        } else if (leadingSpaces) {
+          output.push(`${line.substring(carratIncrement)}`);
+          increment += -carratIncrement;
+        } else {
+          output.push(`${line}`);
+        }
+      } else {
+        output.push(line);
+      }
+    }
+
+    return {
+      output: value.head + output.join('\n') + value.tail,
+      carratIncrement: increment
+    };
+  }
+
+  static renderSingleLineWithTabs(ident, carrat, value) {
+    const leadingSpaces = (/^ {1,2}/).test(value.text.substring(value.startOfLineIndex));
+    let carratIncrement = (/^ [^ ]/).test(value.text.substring(value.startOfLineIndex)) ? 1 : 2;
+    let output = value.text;
+
+    if (ident) {
+      output = `${value.text.substring(0, carrat.start)}  ${value.text.substring(carrat.end)}`;
+    } else if (leadingSpaces) {
+      output = value.text.substring(0, value.startOfLineIndex) +
+        value.text.substring(value.startOfLineIndex + carratIncrement);
+
+      if (carrat.start - value.startOfLineIndex < carratIncrement) {
+        carratIncrement = carrat.start - value.startOfLineIndex;
+      }
+      carratIncrement = -carratIncrement;
+    } else {
+      carratIncrement = 0;
+    }
+    return {
+      output,
+      carratIncrement
+    };
+  }
+
   onKeyDown(event) {
     const TAB_CODE = 9;
     if (event.keyCode === TAB_CODE) {
@@ -35,61 +87,21 @@ export default class Editor extends Component {
     }
 
     if (carrat.highlighting) {
-      const result = this.renderHighlightedLinesWithTabs(indent, value);
+      const result = this.constructor.renderHighlightedLinesWithTabs(indent, value);
       target.value = result.output;
 
-      this.editor.selectionEnd = carrat.end + result.carratIncrement;
+      this.editor.selectionStart = carrat.start;
+      this.editor.selectionEnd = carrat.end + result.carratIncrement >= 0 ?
+        carrat.end + result.carratIncrement : carrat.end;
     } else {
-      const result = this.renderSingleLineWithTabs(indent, carrat, value);
+      const result = this.constructor.renderSingleLineWithTabs(indent, carrat, value);
       target.value = result.output;
 
-      this.editor.selectionStart = carrat.start + result.carratIncrement;
-      this.editor.selectionEnd = carrat.end + result.carratIncrement;
+      this.editor.selectionStart = carrat.start + result.carratIncrement >= 0 ?
+        carrat.start + result.carratIncrement : carrat.start;
+      this.editor.selectionEnd = carrat.end + result.carratIncrement >= 0 ?
+        carrat.end + result.carratIncrement : carrat.end;
     }
-  }
-
-  renderHighlightedLinesWithTabs(ident, value) {
-    const output = [];
-    let carratIncrement = 0;
-
-    for (const line of value.selectedLines) {
-      const leadingSpaces = (/^ {1,2}/).test(line);
-      carratIncrement = (/^ [^ ]/).test(line) ? 1 : 2;
-
-      if (line !== '') {
-        if (ident) {
-          output.push(`  ${line}`);
-        } else if (leadingSpaces) {
-          output.push(`${line.substring(carratIncrement)}`);
-          carratIncrement = -carratIncrement;
-        } else {
-          output.push(`${line}`);
-          carratIncrement = 0;
-        }
-      }
-    }
-
-    return {
-      output: value.head + output.join('\n') + value.tail,
-      carratIncrement
-    };
-  }
-
-  renderSingleLineWithTabs(ident, carrat, value) {
-    const leadingSpaces = (/^ {1,2}/).test(value.text.substring(value.startOfLineIndex));
-    let carratIncrement = (/^ [^ ]/).test(value.text.substring(value.startOfLineIndex)) ? 1 : 2;
-    let output = '';
-    if (ident) {
-      output = `${value.text.substring(0, carrat.start)}  ${value.text.substring(carrat.end)}`;
-    } else if (leadingSpaces) {
-      output = value.text.substring(0, value.startOfLineIndex) +
-        value.text.substring(value.startOfLineIndex + carratIncrement);
-      carratIncrement = -carratIncrement;
-    }
-    return {
-      output,
-      carratIncrement
-    };
   }
 
   render() {
