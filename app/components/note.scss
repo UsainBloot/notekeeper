@@ -12,26 +12,6 @@ $padding: 20px;
 	height: 100vh;
 }
 
-.edit {
-	width: 100%;
-	height: calc(100% - #{$header-full-height});
-
-	padding: $padding;
-
-	background-color: $white;
-
-	border: none;
-	-webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	box-sizing: border-box;
-
-	color: $grey--dark;
-
-	font-size: 14px;
-	font-family: Menlo, Source Code Pro, Monaco, monospace;
-  @include nodrag();
-}
-
 .view {
   width: calc(100% - #{$padding * 2});
   height: calc(100% - #{$header-full-height + ($padding * 2)});

@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react';
+import Editor from './editor';
 import styles from './note.scss';
 
 export default class Note extends Component {
@@ -17,7 +18,7 @@ export default class Note extends Component {
   }
 
   componentDidMount() {
-    this.noteEdit.focus();
+    this.Editor.editor.focus();
     this.noteTitle.value = this.props.title;
   }
 
@@ -33,110 +34,111 @@ export default class Note extends Component {
     }
   }
 
-  checkforTabbing(event) {
-    function resetCarrat(data) {
-      if (data.isHighlight) {
-        this.noteEdit.selectionStart = data.start;
-        this.noteEdit.selectionEnd = data.end + data.increment;
-      } else {
-        this.noteEdit.selectionStart = this.noteEdit.selectionEnd = data.start + data.increment;
-      }
-    }
-
-    const TAB_CODE = 9;
-
-    if (event.keyCode === TAB_CODE) {
-      let isIndent = true;
-      let spaceIncrement = 2;
-
-      if (event.shiftKey) {
-        isIndent = false;
-        spaceIncrement = -2;
-      }
-
-      // get caret position/selection
-      const start = this.noteEdit.selectionStart;
-      const end = this.noteEdit.selectionEnd;
-      const isHighlight = start !== end;
-
-      const target = event.target;
-      const value = target.value;
-
-      if (isHighlight) {
-        let output = '';
-        let counter = 0;
-        let spaceCount = 0;
-        const targetValue = {
-          before: target.value.substring(0, start),
-          end: target.value.substring(end + 1),
-          highlightedLines: target.value.substring(start, end + 1).split('\n')
-        };
-
-        for (const line of targetValue.highlightedLines) {
-          counter += 1;
-          if (line !== '') {
-            if (isIndent) {
-              /* Indent line by 2 spaces */
-              output += `  ${line}`;
-              spaceCount += 2;
-            } else if (line.substring(0, 2) === '  ') {
-              /* Unindent - Line starts with 2 spaces */
-              output += `${line.substring(2)}`;
-              spaceCount -= 2;
-            } else if (line.substring(0, 1) === ' ') {
-              /* Unindent - Line starts with a single space */
-              output += `${line.substring(1)}`;
-              spaceCount -= 1;
-            } else {
-              output += `${line}`;
-            }
-
-            if (counter !== targetValue.highlightedLines.length) {
-              output += '\n';
-            }
-          }
-        }
-
-        /* Output and reset */
-        target.value = targetValue.before + output + targetValue.end;
-        resetCarrat.call(this, {
-          isHighlight,
-          start,
-          end,
-          increment: spaceCount
-        });
-      } else {
-        const startOfLineIndex = target.value.substring(0, start).lastIndexOf('\n') + 1;
-        if (isIndent) {
-          /* Indent line by 2 spaces */
-          target.value = `${value.substring(0, start)}  ${value.substring(end)}`;
-          spaceIncrement = 2;
-        } else if (target.value.substring(startOfLineIndex, startOfLineIndex + 2) === '  ') {
-          /* Unindent - Line starts with 2 spaces */
-          target.value = value.substring(0, startOfLineIndex) +
-            value.substring(startOfLineIndex + 2);
-          spaceIncrement = start !== startOfLineIndex ? -2 : 0;
-        } else if (target.value.substring(startOfLineIndex, startOfLineIndex + 1) === ' ') {
-          /* Unindent - Line starts with a single space */
-          target.value = value.substring(0, startOfLineIndex) +
-            value.substring(startOfLineIndex + 1);
-          spaceIncrement = start !== startOfLineIndex ? -1 : 0;
-        } else {
-          spaceIncrement = 0;
-        }
-
-        /* Reset */
-        resetCarrat.call(this, {
-          isHighlight,
-          start,
-          end,
-          increment: spaceIncrement
-        });
-      }
-
-      event.preventDefault();
-    }
-  }
+  // checkforTabbing(event) {
+  //   function resetCarrat(data) {
+  //     if (data.isHighlight) {
+  //       this.Editor.value.selectionStart = data.start;
+  //       this.Editor.value.selectionEnd = data.end + data.increment;
+  //     } else {
+  //       this.Editor.value.selectionStart = data.start + data.increment;
+  //       this.Editor.value.selectionEnd = data.start + data.increment;
+  //     }
+  //   }
+  //
+  //   const TAB_CODE = 9;
+  //
+  //   if (event.keyCode === TAB_CODE) {
+  //     let isIndent = true;
+  //     let spaceIncrement = 2;
+  //
+  //     if (event.shiftKey) {
+  //       isIndent = false;
+  //       spaceIncrement = -2;
+  //     }
+  //
+  //     // get caret position/selection
+  //     const start = this.Editor.value.selectionStart;
+  //     const end = this.Editor.value.selectionEnd;
+  //     const isHighlight = start !== end;
+  //
+  //     const target = event.target;
+  //     const value = target.value;
+  //
+  //     if (isHighlight) {
+  //       let output = '';
+  //       let counter = 0;
+  //       let spaceCount = 0;
+  //       const targetValue = {
+  //         before: target.value.substring(0, start),
+  //         end: target.value.substring(end + 1),
+  //         highlightedLines: target.value.substring(start, end + 1).split('\n')
+  //       };
+  //
+  //       for (const line of targetValue.highlightedLines) {
+  //         counter += 1;
+  //         if (line !== '') {
+  //           if (isIndent) {
+  //             /* Indent line by 2 spaces */
+  //             output += `  ${line}`;
+  //             spaceCount += 2;
+  //           } else if (line.substring(0, 2) === '  ') {
+  //             /* Unindent - Line starts with 2 spaces */
+  //             output += `${line.substring(2)}`;
+  //             spaceCount -= 2;
+  //           } else if (line.substring(0, 1) === ' ') {
+  //             /* Unindent - Line starts with a single space */
+  //             output += `${line.substring(1)}`;
+  //             spaceCount -= 1;
+  //           } else {
+  //             output += `${line}`;
+  //           }
+  //
+  //           if (counter !== targetValue.highlightedLines.length) {
+  //             output += '\n';
+  //           }
+  //         }
+  //       }
+  //
+  //       /* Output and reset */
+  //       target.value = targetValue.before + output + targetValue.end;
+  //       resetCarrat.call(this, {
+  //         isHighlight,
+  //         start,
+  //         end,
+  //         increment: spaceCount
+  //       });
+  //     } else {
+  //       const startOfLineIndex = target.value.substring(0, start).lastIndexOf('\n') + 1;
+  //       if (isIndent) {
+  //         /* Indent line by 2 spaces */
+  //         target.value = `${value.substring(0, start)}  ${value.substring(end)}`;
+  //         spaceIncrement = 2;
+  //       } else if (target.value.substring(startOfLineIndex, startOfLineIndex + 2) === '  ') {
+  //         /* Unindent - Line starts with 2 spaces */
+  //         target.value = value.substring(0, startOfLineIndex) +
+  //           value.substring(startOfLineIndex + 2);
+  //         spaceIncrement = start !== startOfLineIndex ? -2 : 0;
+  //       } else if (target.value.substring(startOfLineIndex, startOfLineIndex + 1) === ' ') {
+  //         /* Unindent - Line starts with a single space */
+  //         target.value = value.substring(0, startOfLineIndex) +
+  //           value.substring(startOfLineIndex + 1);
+  //         spaceIncrement = start !== startOfLineIndex ? -1 : 0;
+  //       } else {
+  //         spaceIncrement = 0;
+  //       }
+  //
+  //       /* Reset */
+  //       resetCarrat.call(this, {
+  //         isHighlight,
+  //         start,
+  //         end,
+  //         increment: spaceIncrement
+  //       });
+  //     }
+  //
+  //     event.preventDefault();
+  //   }
+  // }
 
 
   render() {
@@ -152,16 +154,14 @@ export default class Note extends Component {
           />
           <button
             className={`${styles.header__btn} btn btn--white`}
-            onClick={() => this.switchView(view, this.noteEdit)}
+            onClick={() => this.switchView(view, this.Editor.editor)}
           >
             { isEditView ? 'View' : 'Edit' }
           </button>
         </div>
-        <textarea
-          className={`${styles.edit} ${isEditView ? '' : 'hide'}`}
-          name="noteEdit"
-          ref={(input) => { this.noteEdit = input; }}
-          onKeyDown={(input) => this.checkforTabbing(input)}
+        <Editor
+          isEditView={isEditView}
+          ref={(input) => { this.Editor = input; }}
         />
         <div
           className={`${styles.view} view ${isEditView ? 'hide' : ''}`}

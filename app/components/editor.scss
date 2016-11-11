@@ -1,0 +1,28 @@
+@import '../styles/colours';
+@import '../styles/nodrag';
+
+$header-height: 16px;
+$header-padding: 20px;
+$header-full-height: ($header-padding * 2) + $header-height;
+
+$padding: 20px;
+
+.edit {
+	width: 100%;
+	height: calc(100% - #{$header-full-height});
+
+	padding: $padding;
+
+	background-color: $white;
+
+	border: none;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+
+	color: $grey--dark;
+
+	font-size: 14px;
+	font-family: Menlo, Source Code Pro, Monaco, monospace;
+  @include nodrag();
+}
