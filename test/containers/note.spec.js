@@ -16,7 +16,7 @@ function setup(initialState) {
   );
   return {
     app,
-    edit: app.find('.note__edit'),
+    edit: app.find('.editor__edit'),
     view: app.find('.note__view'),
     editViewButton: app.find('.note__header__btn'),
     title: app.find('.note__header__title')

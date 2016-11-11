@@ -27,7 +27,7 @@ function setup() {
     actions,
     title: component.find('.note__header__title'),
     editViewButton: component.find('.note__header__btn'),
-    edit: component.find('.note__edit'),
+    edit: component.find('.editor__edit'),
     view: component.find('.note__view')
   };
 }
